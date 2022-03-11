@@ -1,6 +1,5 @@
-class NotesHandler{
-  constructor(service)
-  {
+class NotesHandler {
+  constructor (service) {
     this._service = service
 
     this.postNoteHandler = this.postNoteHandler.bind(this)
@@ -10,9 +9,8 @@ class NotesHandler{
     this.deleteNoteByIdHandler = this.deleteNoteByIdHandler.bind(this)
   }
 
-  postNoteHandler(request, h)
-  {
-    try{
+  postNoteHandler (request, h) {
+    try {
       const { title = 'untitled', body, tags } = request.payload
 
       const noteId = this._service.addNote({ title, body, tags })
@@ -23,18 +21,17 @@ class NotesHandler{
           message: 'Catatan berhasil ditambahkan',
           data:
           {
-            noteId,
-          },
+            noteId
+          }
         }
       )
       response.code(201)
       return response
-    }
-    catch (error){
+    } catch (error) {
       const response = h.response(
         {
           status: 'fail',
-          message: error.message,
+          message: error.message
         }
       )
       response.code(400)
@@ -42,35 +39,32 @@ class NotesHandler{
     }
   }
 
-  getNotesHandler()
-  {
+  getNotesHandler () {
     const notes = this._service.getNotes()
 
-    return{
+    return {
       status: 'success',
       data: {
-        notes,
+        notes
       }
     }
   }
 
-  getNoteByIdHandler(request, h)
-  {
-    try{
+  getNoteByIdHandler (request, h) {
+    try {
       const { id } = request.params
       const note = this._service.getNoteById(id)
-      return{
+      return {
         status: 'success',
         data: {
-          note,
-        },
+          note
+        }
       }
-    }
-    catch(error){
+    } catch (error) {
       const response = h.response(
         {
           status: 'fail',
-          message: error.message,
+          message: error.message
         }
       )
       response.code(404)
@@ -78,42 +72,36 @@ class NotesHandler{
     }
   }
 
-  putNoteByIdHandler(request, h)
-  {
-   try{
-    const { id } = request.params
-    this._service.editNoteById(id, request.payload)
+  putNoteByIdHandler (request, h) {
+    try {
+      const { id } = request.params
+      this._service.editNoteById(id, request.payload)
 
-    return{
-      status: 'success',
-      message: 'Catatan berhasil diperbarui',
+      return {
+        status: 'success',
+        message: 'Catatan berhasil diperbarui'
+      }
+    } catch (error) {
+      const response = h.response(
+        {
+          status: 'fail',
+          message: error.message
+        }
+      )
+      response.code(404)
+      return response
     }
-   }
-
-   catch(error){
-     const response = h.response(
-       {
-         status: 'fail',
-         message: error.message
-       }
-     )
-     response.code(404)
-     return response
-   }
   }
 
-  deleteNoteByIdHandler(request, h)
-  {
-    try{
+  deleteNoteByIdHandler (request, h) {
+    try {
       const { id } = request.params
       this._service.deleteNoteById(id)
-
-      return{
+      return {
         status: 'success',
-        message: ' Catatan berhasil dihapus',
+        message: 'Catatan berhasil dihapus'
       }
-    }
-    catch(error){
+    } catch (error) {
       const response = h.response({
         status: 'fail',
         message: 'Catatan gagal dihapus. Id tidak ditemukan'

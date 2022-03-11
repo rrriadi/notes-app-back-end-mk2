@@ -1,83 +1,71 @@
-const { nanoid } = require("nanoid")
+const { nanoid } = require('nanoid')
 
-class NotesService
-{
-    constructor()
-    {
-        this.notes = []
-    }
+class NotesService {
+  constructor () {
+    this.notes = []
+  }
 
-    addNote({ title, body, tags })
-    {
-        const id = nanoid(16)
-        const createdAt = new Date().toISOString()
-        const updatedAt = createdAt
-        const newNote = 
+  addNote ({ title, body, tags }) {
+    const id = nanoid(16)
+    const createdAt = new Date().toISOString()
+    const updatedAt = createdAt
+    const newNote =
         {
-            title, tags, body, id, createdAt, updatedAt,
+          title, tags, body, id, createdAt, updatedAt
         }
 
-        this.notes.push(newNote)
+    this.notes.push(newNote)
 
-        const isSuccess = this._notes.filter((note) => note.id === id).length > 0
+    const isSuccess = this._notes.filter((note) => note.id === id).length > 0
 
-        if(!isSuccess)
-        {
-            throw new Error('Catatan gagal ditambahkan')
-        }
-
-        return id
+    if (!isSuccess) {
+      throw new Error('Catatan gagal ditambahkan')
     }
 
-    getNotes()
-    {
-        return this._notes
+    return id
+  }
+
+  getNotes () {
+    return this._notes
+  }
+
+  getNoteById (id) {
+    const note = this._notes.filter((n) => n.id === id)[0]
+
+    if (!note) {
+      throw new Error('Catatan tidak ditemukan')
+    }
+    return note
+  }
+
+  editNoteById (id, { title, body, tags }) {
+    const index = this._notes.findIndex((note) => note.id === id)
+
+    if (index === -1) {
+      throw new Error('Gagal memperbarui catatan. Id tidak ditemukan')
     }
 
-    getNoteById(id)
-    {
-        const note = this._notes.filter((n) => n.id === n.id)[0]
+    const updatedAt = new Date().toISOString()
 
-        if(!note)
+    this._notes[index] =
         {
-            throw new Error ("Catatan tidak ditemukan")
+          ...this._notes[index],
+          title,
+          tags,
+          body,
+          updatedAt
         }
-        return note
+  }
+
+  deleteNoteById (id) {
+    const index = this._notes.findIndex((note) => note.id === id)
+
+    if (index === -1) {
+      throw new Error('Catatan gagal dihapus. Id tidak ditemukan')
     }
 
-    editNoteById(id, { title, body, tags })
-    {
-        const index = this._notes.findIndex((note) => note.id === id)
-
-        if ( index === -1)
-        {
-            throw new Error('Gagal memperbarui catatan. Id tidak ditemukan')
-        }
-
-        const updatedAt = new Date().toISOString()
-
-        this._notes[index] = 
-        {
-            ...this._notes[index],
-            title,
-            tags,
-            body,
-            updatedAt,
-        }
-    }
-
-    deleteNoteById(id)
-    {
-        const index = this._notes.findIndex((note) => note.id === id)
-
-        if (index === -1)
-        {
-            throw new Error ('Catatan gagal dihapus. Id tidak ditemukan')
-        }
-
-        this._notes.splice(index, 1)
-    }
+    this._notes.splice(index, 1)
+  }
 }
-
 
 module.exports = NotesService
